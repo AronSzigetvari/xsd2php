@@ -32,7 +32,7 @@ class ShortNamingStrategy implements NamingStrategy
         return $this->classify($item->getName());
     }
 
-    private function classify($name)
+    protected function classify($name)
     {
     	return Inflector::classify(str_replace(".", " ", $name));
     }

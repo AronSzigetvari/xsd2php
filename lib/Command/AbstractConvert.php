@@ -52,12 +52,18 @@ abstract class AbstractConvert extends Console\Command\Command
             throw new \RuntimeException(__CLASS__ . " requires at least one ns-target.");
         }
 
-        if($input->getOption('naming-strategy')=='short'){
+        $namingStrategy = $input->getOption('naming-strategy');
+        if($namingStrategy=='short'){
             $naming = new ShortNamingStrategy();
-        }elseif($input->getOption('naming-strategy')=='long'){
+        }elseif($namingStrategy=='long'){
             $naming = new LongNamingStrategy();
         }else{
-            throw new \InvalidArgumentException("Unsupported naming strategy");
+            $classname = str_replace('/', '\\', $namingStrategy);
+            if(class_exists($classname)){
+                $naming = new $classname;
+            }else{
+                throw new \InvalidArgumentException("Unsupported naming strategy");
+            }
         }
 
         $converter = $this->getConverterter($naming);
